@@ -17,6 +17,10 @@ __pycache__/
 env/
 venv/
 
+# Ignore project documentation archive and duplicate model package
+car_damage_detection_project_record.docx
+model.zip
+
 # -----------------------
 # Dataset folders
 # -----------------------
