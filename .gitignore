@@ -1,0 +1,53 @@
+# -----------------------
+# Python cache
+# -----------------------
+__pycache__/
+*.py[cod]
+
+# -----------------------
+# Jupyter
+# -----------------------
+.ipynb_checkpoints/
+
+# -----------------------
+# Virtual environments
+# -----------------------
+.env
+.venv
+env/
+venv/
+
+# -----------------------
+# Dataset folders
+# -----------------------
+data/
+car_damage_yolo/
+
+# -----------------------
+# YOLO outputs
+# -----------------------
+runs/*
+
+# Allow trained model directory
+!runs/detect/
+!runs/detect/car_damage_detector2/
+!runs/detect/car_damage_detector2/weights/
+!runs/detect/car_damage_detector2/weights/best.pt
+
+# -----------------------
+# OS junk
+# -----------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -----------------------
+# IDE files
+# -----------------------
+.vscode/
+.idea/
+
+# -----------------------
+# Logs
+# -----------------------
+*.log
