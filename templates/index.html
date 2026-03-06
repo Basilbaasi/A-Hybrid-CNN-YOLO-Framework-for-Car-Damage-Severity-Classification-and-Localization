@@ -610,121 +610,207 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="main-container">
         <div class="content-grid">
-            <!-- Input Section -->
+
+            <!-- INPUT SECTION -->
             <section class="input-section">
                 <div class="card">
+
                     <div class="card-header">
                         <h2 class="card-title">
                             <span class="card-title-icon input">📤</span>
                             Upload Image
                         </h2>
                     </div>
+
                     <div class="card-body">
+
                         <form action="/predict" method="post" enctype="multipart/form-data" id="uploadForm">
-                            <!-- Drag & Drop Zone -->
+
+                            <!-- Upload Zone -->
                             <div class="upload-zone" id="uploadZone">
                                 <div class="upload-icon">📷</div>
-                                <p class="upload-text">Drop your image here or click to browse</p>
-                                <p class="upload-hint">Supports: JPG, PNG, JPEG (Max 10MB)</p>
-                                <input type="file" name="file" id="fileInput" class="upload-input" accept="image/*" required>
+
+                                <p class="upload-text">
+                                    Drop your image here or click to browse
+                                </p>
+
+                                <p class="upload-hint">
+                                    Supports: JPG, PNG, JPEG (Max 10MB)
+                                </p>
+
+                                <input
+                                    type="file"
+                                    name="file"
+                                    id="fileInput"
+                                    class="upload-input"
+                                    accept="image/*"
+                                    required
+                                >
                             </div>
 
-                            <!-- Image Preview -->
+                            <!-- Preview -->
                             <div class="preview-container" id="previewContainer">
+
                                 <div class="preview-label">
-                                    <span>👁️</span>
-                                    Preview
+                                    <span>👁️</span> Preview
                                 </div>
+
                                 <div class="preview-wrapper">
-                                    <img src="" alt="Preview" class="preview-image" id="previewImage">
-                                    <button type="button" class="preview-remove" id="removeImage" title="Remove image">✕</button>
+
+                                    <img
+                                        src=""
+                                        class="preview-image"
+                                        id="previewImage"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="preview-remove"
+                                        id="removeImage"
+                                    >
+                                        ✕
+                                    </button>
+
                                 </div>
+
                             </div>
 
                             <!-- Analyze Button -->
                             <button type="submit" class="analyze-btn" id="analyzeBtn">
+
                                 <span class="analyze-btn-icon">🔍</span>
-                                <span class="btn-text">Analyze Damage</span>
+
+                                <span class="btn-text">
+                                    Analyze Damage
+                                </span>
+
                             </button>
+
                         </form>
 
                         <!-- Severity Legend -->
                         <div class="info-grid">
+
                             <div class="info-item">
                                 <div class="info-dot minor"></div>
                                 <span class="info-text">Minor Damage</span>
                             </div>
+
                             <div class="info-item">
                                 <div class="info-dot moderate"></div>
                                 <span class="info-text">Moderate Damage</span>
                             </div>
+
                             <div class="info-item">
                                 <div class="info-dot severe"></div>
                                 <span class="info-text">Severe Damage</span>
                             </div>
+
                         </div>
+
                     </div>
                 </div>
             </section>
 
-            <!-- Result Section -->
+
+
+            <!-- RESULT SECTION -->
             <section class="result-section">
                 <div class="card">
+
                     <div class="card-header">
                         <h2 class="card-title">
                             <span class="card-title-icon result">📊</span>
                             Analysis Result
                         </h2>
                     </div>
+
                     <div class="card-body">
+
                         {% if result_image %}
-                        <!-- Result Content -->
+
                         <div class="result-content">
-                            <!-- Processed Image -->
+
+                            <!-- Result Image -->
                             <div class="result-image-container">
-                                <img src="{{ result_image }}" alt="Damage Detection Result" class="result-image">
+                                <img
+                                    src="{{ result_image }}"
+                                    class="result-image"
+                                >
                             </div>
 
-                            <!-- Severity Display -->
+
+                            <!-- Detected Damages -->
                             <div class="severity-section">
-                                <p class="severity-label">Detected Damage Severity</p>
-                                {% if severity == "minor" %}
-                                <div class="severity-badge minor">
-                                    <span class="severity-indicator"></span>
-                                    {{ severity.title() }}
-                                </div>
-                                {% elif severity == "moderate" %}
-                                <div class="severity-badge moderate">
-                                    <span class="severity-indicator"></span>
-                                    {{ severity.title() }}
-                                </div>
-                                {% elif severity == "severe" %}
-                                <div class="severity-badge severe">
-                                    <span class="severity-indicator"></span>
-                                    {{ severity.title() }}
-                                </div>
+
+                                <p class="severity-label">
+                                    Detected Damages
+                                </p>
+
+
+                                {% if detections %}
+
+                                    {% for d in detections %}
+
+                                    <div class="severity-badge {{ d.severity }}">
+
+                                        <span class="severity-indicator"></span>
+
+                                        {{ d.severity.title() }}
+
+                                        &nbsp; | &nbsp;
+
+                                        Confidence:
+                                        {{ (d.confidence * 100) | round(1) }} %
+
+                                    </div>
+
+                                    <br>
+
+                                    {% endfor %}
+
                                 {% else %}
-                                <div class="severity-badge unknown">
-                                    <span class="severity-indicator"></span>
-                                    {{ severity }}
-                                </div>
+
+                                    <div class="severity-badge unknown">
+
+                                        <span class="severity-indicator"></span>
+
+                                        No Damage Detected
+
+                                    </div>
+
                                 {% endif %}
+
                             </div>
+
                         </div>
+
                         {% else %}
+
                         <!-- Placeholder -->
                         <div class="result-placeholder">
+
                             <div class="result-placeholder-icon">📋</div>
-                            <p class="result-placeholder-text">No analysis yet</p>
-                            <p class="result-placeholder-hint">Upload an image and click "Analyze Damage" to see results</p>
+
+                            <p class="result-placeholder-text">
+                                No analysis yet
+                            </p>
+
+                            <p class="result-placeholder-hint">
+                                Upload an image and click "Analyze Damage"
+                            </p>
+
                         </div>
+
                         {% endif %}
+
                     </div>
+
                 </div>
             </section>
+
         </div>
     </main>
 
