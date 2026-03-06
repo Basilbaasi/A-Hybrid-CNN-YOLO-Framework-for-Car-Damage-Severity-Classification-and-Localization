@@ -1,32 +1,856 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Car Damage Detection</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Damage Detection System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS Reset & Base Styles ===== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Palette */
+            --primary: #1e40af;
+            --primary-dark: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #64748b;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            
+            /* Severity Colors */
+            --severity-minor: #22c55e;
+            --severity-moderate: #f97316;
+            --severity-severe: #ef4444;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms ease;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .header-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-left: auto;
+            font-weight: 500;
+        }
+
+        /* ===== Main Container ===== */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* ===== Two Column Layout ===== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== Card Component ===== */
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: box-shadow var(--transition-normal);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(to right, #fafafa, #ffffff);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .card-title-icon.input {
+            background: #dbeafe;
+            color: var(--primary);
+        }
+
+        .card-title-icon.result {
+            background: #dcfce7;
+            color: var(--severity-minor);
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* ===== Upload Zone ===== */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+            background: #fafafa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(59, 130, 246, 0.03) 100%);
+            opacity: 0;
+            transition: opacity var(--transition-normal);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary-light);
+            background: #f0f7ff;
+        }
+
+        .upload-zone:hover::before {
+            opacity: 1;
+        }
+
+        .upload-zone.drag-over {
+            border-color: var(--primary);
+            background: #eff6ff;
+            transform: scale(1.01);
+        }
+
+        .upload-zone.has-file {
+            border-color: var(--severity-minor);
+            background: #f0fdf4;
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .upload-zone.has-file .upload-icon {
+            background: linear-gradient(135deg, var(--severity-minor) 0%, #4ade80 100%);
+        }
+
+        .upload-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        /* ===== Image Preview ===== */
+        .preview-container {
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .preview-container.active {
+            display: block;
+            animation: fadeIn var(--transition-slow);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .preview-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .preview-wrapper {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .preview-remove {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-remove:hover {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        /* ===== Analyze Button ===== */
+        .analyze-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all var(--transition-normal);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analyze-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .analyze-btn:hover::before {
+            left: 100%;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        }
+
+        .analyze-btn:active {
+            transform: translateY(0);
+        }
+
+        .analyze-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .analyze-btn-icon {
+            font-size: 1.25rem;
+        }
+
+        /* ===== Result Section ===== */
+        .result-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .result-placeholder-icon {
+            width: 80px;
+            height: 80px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.5;
+        }
+
+        .result-placeholder-text {
+            font-size: 1.125rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-placeholder-hint {
+            font-size: 0.875rem;
+        }
+
+        /* ===== Result Content ===== */
+        .result-content {
+            animation: fadeIn var(--transition-slow);
+        }
+
+        .result-image-container {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* ===== Severity Badge ===== */
+        .severity-section {
+            background: linear-gradient(135deg, #fafafa 0%, #f8fafc 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .severity-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .severity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .severity-badge.minor {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            border: 1px solid #86efac;
+        }
+
+        .severity-badge.moderate {
+            background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+            color: #9a3412;
+            border: 1px solid #fdba74;
+        }
+
+        .severity-badge.severe {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .severity-badge.unknown {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .severity-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .severity-badge.minor .severity-indicator {
+            background: var(--severity-minor);
+            box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.3);
+        }
+
+        .severity-badge.moderate .severity-indicator {
+            background: var(--severity-moderate);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.3);
+        }
+
+        .severity-badge.severe .severity-indicator {
+            background: var(--severity-severe);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        /* ===== Info Cards ===== */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .info-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .info-dot.minor { background: var(--severity-minor); }
+        .info-dot.moderate { background: var(--severity-moderate); }
+        .info-dot.severe { background: var(--severity-severe); }
+
+        .info-text {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        /* ===== Loading State ===== */
+        .analyze-btn.loading {
+            pointer-events: none;
+        }
+
+        .analyze-btn.loading .btn-text::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* ===== Responsive Adjustments ===== */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .header-subtitle {
+                display: none;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+
+            .card-header, .card-body {
+                padding: 1rem;
+            }
+
+            .upload-zone {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
 </head>
-
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">AI</div>
+            <h1 class="header-title">Car Damage Detection System</h1>
+            <span class="header-subtitle">Powered by YOLO & CNN</span>
+        </div>
+    </header>
 
-<h1>Car Damage Detection System</h1>
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="content-grid">
+            <!-- Input Section -->
+            <section class="input-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon input">📤</span>
+                            Upload Image
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <form action="/predict" method="post" enctype="multipart/form-data" id="uploadForm">
+                            <!-- Drag & Drop Zone -->
+                            <div class="upload-zone" id="uploadZone">
+                                <div class="upload-icon">📷</div>
+                                <p class="upload-text">Drop your image here or click to browse</p>
+                                <p class="upload-hint">Supports: JPG, PNG, JPEG (Max 10MB)</p>
+                                <input type="file" name="file" id="fileInput" class="upload-input" accept="image/*" required>
+                            </div>
 
-<form action="/predict" method="post" enctype="multipart/form-data">
+                            <!-- Image Preview -->
+                            <div class="preview-container" id="previewContainer">
+                                <div class="preview-label">
+                                    <span>👁️</span>
+                                    Preview
+                                </div>
+                                <div class="preview-wrapper">
+                                    <img src="" alt="Preview" class="preview-image" id="previewImage">
+                                    <button type="button" class="preview-remove" id="removeImage" title="Remove image">✕</button>
+                                </div>
+                            </div>
 
-<input type="file" name="file" required>
+                            <!-- Analyze Button -->
+                            <button type="submit" class="analyze-btn" id="analyzeBtn">
+                                <span class="analyze-btn-icon">🔍</span>
+                                <span class="btn-text">Analyze Damage</span>
+                            </button>
+                        </form>
 
-<br><br>
+                        <!-- Severity Legend -->
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-dot minor"></div>
+                                <span class="info-text">Minor Damage</span>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-dot moderate"></div>
+                                <span class="info-text">Moderate Damage</span>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-dot severe"></div>
+                                <span class="info-text">Severe Damage</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-<button type="submit">Analyze</button>
+            <!-- Result Section -->
+            <section class="result-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <span class="card-title-icon result">📊</span>
+                            Analysis Result
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        {% if result_image %}
+                        <!-- Result Content -->
+                        <div class="result-content">
+                            <!-- Processed Image -->
+                            <div class="result-image-container">
+                                <img src="{{ result_image }}" alt="Damage Detection Result" class="result-image">
+                            </div>
 
-</form>
+                            <!-- Severity Display -->
+                            <div class="severity-section">
+                                <p class="severity-label">Detected Damage Severity</p>
+                                {% if severity == "minor" %}
+                                <div class="severity-badge minor">
+                                    <span class="severity-indicator"></span>
+                                    {{ severity.title() }}
+                                </div>
+                                {% elif severity == "moderate" %}
+                                <div class="severity-badge moderate">
+                                    <span class="severity-indicator"></span>
+                                    {{ severity.title() }}
+                                </div>
+                                {% elif severity == "severe" %}
+                                <div class="severity-badge severe">
+                                    <span class="severity-indicator"></span>
+                                    {{ severity.title() }}
+                                </div>
+                                {% else %}
+                                <div class="severity-badge unknown">
+                                    <span class="severity-indicator"></span>
+                                    {{ severity }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <!-- Placeholder -->
+                        <div class="result-placeholder">
+                            <div class="result-placeholder-icon">📋</div>
+                            <p class="result-placeholder-text">No analysis yet</p>
+                            <p class="result-placeholder-hint">Upload an image and click "Analyze Damage" to see results</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
 
-{% if result_image %}
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Car Damage Detection System &copy; 2025 | AI-Powered Insurance Assessment</p>
+    </footer>
 
-<h2>Result</h2>
+    <!-- JavaScript -->
+    <script>
+        // DOM Elements
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const previewImage = document.getElementById('previewImage');
+        const removeImageBtn = document.getElementById('removeImage');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const uploadForm = document.getElementById('uploadForm');
 
-<img src="{{ result_image }}" width="500">
+        // Click on upload zone triggers file input
+        uploadZone.addEventListener('click', (e) => {
+            if (e.target !== removeImageBtn) {
+                fileInput.click();
+            }
+        });
 
-<h2>Damage Severity: {{ severity }}</h2>
+        // Drag and drop events
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
 
-{% endif %}
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadZone.classList.add('drag-over');
+        }
+
+        function unhighlight() {
+            uploadZone.classList.remove('drag-over');
+        }
+
+        // Handle dropped files
+        uploadZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        }
+
+        // Handle file selection
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                handleFileSelect(this.files[0]);
+            }
+        });
+
+        // Process selected file
+        function handleFileSelect(file) {
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select a valid image file (JPG, PNG, JPEG)');
+                return;
+            }
+
+            // Validate file size (10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size should not exceed 10MB');
+                return;
+            }
+
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.classList.add('active');
+                uploadZone.classList.add('has-file');
+                
+                // Update upload zone text
+                uploadZone.querySelector('.upload-text').textContent = file.name;
+                uploadZone.querySelector('.upload-hint').textContent = formatFileSize(file.size);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove image
+        removeImageBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            fileInput.value = '';
+            previewImage.src = '';
+            previewContainer.classList.remove('active');
+            uploadZone.classList.remove('has-file');
+            uploadZone.querySelector('.upload-text').textContent = 'Drop your image here or click to browse';
+            uploadZone.querySelector('.upload-hint').textContent = 'Supports: JPG, PNG, JPEG (Max 10MB)';
+        });
+
+        // Format file size
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Form submission loading state
+        uploadForm.addEventListener('submit', function() {
+            analyzeBtn.classList.add('loading');
+            analyzeBtn.disabled = true;
+            analyzeBtn.querySelector('.btn-text').textContent = 'Analyzing';
+        });
+    </script>
 </body>
 </html>
