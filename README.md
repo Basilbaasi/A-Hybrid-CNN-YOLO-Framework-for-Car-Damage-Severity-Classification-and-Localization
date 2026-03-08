@@ -162,17 +162,20 @@ YOLOv8 is used to detect damaged regions in the vehicle image.
 |------|------|
 | Model | YOLOv8n |
 | Image Size | 640 |
-| Epochs | 50 |
-| Batch Size | 16 |
+| Epochs | ~30 |
+| Batch Size | 8 |
+
+### Evaluation Metrics
 
 ### Evaluation Metrics
 
 | Metric | Score |
 |------|------|
-| Precision | **0.478** |
-| Recall | **0.744** |
-| mAP@0.5 | **0.615** |
-| mAP@0.5:0.95 | **0.549** |
+| Precision | **0.542** |
+| Recall | **0.708** |
+| mAP@0.5 | **0.659** |
+| mAP@0.5:0.95 | **0.647** |
+
 
 These results show the model can effectively detect damaged areas in vehicle images.
 
