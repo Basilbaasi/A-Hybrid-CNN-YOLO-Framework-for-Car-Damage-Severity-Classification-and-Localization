@@ -5,7 +5,6 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.so
 
 # ==============================
 # Virtual Environments
@@ -39,43 +38,45 @@ Thumbs.db
 .ipynb_checkpoints/
 
 # ==============================
-# ML Training Outputs (YOLO)
+# ML Training Outputs
 # ==============================
 runs/
 outputs/
 logs/
 
 # ==============================
-# Model Weights (IGNORE HEAVY FILES)
+# Model Weights (ignore files, keep folder)
 # ==============================
+models/*
+!models/.gitkeep
+
 *.pt
 *.pth
 *.h5
 *.onnx
 
-# Ignore full model folders but keep structure
-models/*
-!models/.gitkeep
+# ==============================
+# DATASET (IMPORTANT)
+# ==============================
+# Ignore ALL files inside data
+data/**/*
+
+# But keep folder structure
+!data/**/
+
+# Keep placeholder files
+!data/**/.gitkeep
 
 # ==============================
-# Dataset (IMPORTANT)
+# YOLO DATASET
 # ==============================
-# Ignore actual data but keep folder structure
-data/*
-!data/.gitkeep
+car_damage_yolo/**/*
 
+# Keep folder structure
+!car_damage_yolo/**/
 
-car_damage_yolo/*
-!car_damage_yolo/images/.gitkeep
-!car_damage_yolo/images/train/.gitkeep
-!car_damage_yolo/images/val/.gitkeep
-!car_damage_yolo/labels/.gitkeep
-!car_damage_yolo/labels/train.gitkeep
-!car_damage_yolo/labels/val.gitkeep
-!car_damage_yolo/data.yaml/.gitkeep
-
-
-!car_damage_yolo/.gitkeep
+# Keep placeholder
+!car_damage_yolo/**/.gitkeep
 
 # ==============================
 # Cache / Temp
@@ -89,8 +90,3 @@ car_damage_yolo/*
 *.zip
 *.tar
 *.gz
-
-# ==============================
-# Environment / Secrets
-# ==============================
-*.env
