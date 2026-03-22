@@ -5,7 +5,6 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-
 # ==============================
 # Virtual Environments
 # ==============================
@@ -14,76 +13,61 @@ __pycache__/
 env/
 venv/
 cnn_yolo/
-
 # ==============================
 # IDE / Editor
 # ==============================
 .vscode/
 .idea/
-
 # ==============================
 # OS Files
 # ==============================
 .DS_Store
 Thumbs.db
-
 # ==============================
 # Logs
 # ==============================
 *.log
-
 # ==============================
 # Jupyter
 # ==============================
 .ipynb_checkpoints/
-
 # ==============================
-# ML Training Outputs
+# YOLO Training Outputs
 # ==============================
 runs/
 outputs/
-logs/
-
 # ==============================
-# Model Weights (ignore files, keep folder)
+# Model Files (ignore all except README.txt)
 # ==============================
 models/*
-!models/.gitkeep
-
+!models/README.txt
 *.pt
 *.pth
 *.h5
 *.onnx
-
 # ==============================
-# DATASET (IMPORTANT)
+# CNN Dataset (ignore all except README.txt)
 # ==============================
-# Ignore ALL files inside data
-data/**/*
-
-# But keep folder structure
-!data/**/
-
-# Keep placeholder files
-!data/**/.gitkeep
-
+data/training/*
+!data/training/*/
+!data/training/*/README.txt
+data/validation/*
+!data/validation/*/
+!data/validation/*/README.txt
 # ==============================
-# YOLO DATASET
+# YOLO Dataset (ignore all except README.txt)
 # ==============================
-car_damage_yolo/**/*
-
-# Keep folder structure
-!car_damage_yolo/**/
-
-# Keep placeholder
-!car_damage_yolo/**/.gitkeep
-
+car_damage_yolo/images/*
+!car_damage_yolo/images/*/
+!car_damage_yolo/images/*/README.txt
+car_damage_yolo/labels/*
+!car_damage_yolo/labels/*/
+!car_damage_yolo/labels/*/README.txt
 # ==============================
 # Cache / Temp
 # ==============================
 .cache/
 *.cache
-
 # ==============================
 # Misc
 # ==============================

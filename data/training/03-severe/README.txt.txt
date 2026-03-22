@@ -1,0 +1,1 @@
+Add all the images to train CNN for severe prediction
