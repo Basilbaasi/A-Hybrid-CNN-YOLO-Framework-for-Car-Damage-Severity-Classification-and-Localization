@@ -1,1 +1,0 @@
-Add all the images to train CNN for moderate prediction
