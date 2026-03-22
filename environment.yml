@@ -1,4 +1,4 @@
-name: mlops_cnn
+name: cnn_yolo
 channels:
   - defaults
 dependencies:
@@ -121,7 +121,7 @@ dependencies:
     - platformdirs==4.4.0
     - prometheus-client==0.24.1
     - prompt-toolkit==3.0.52
-    - protobuf==4.25.8
+    - protobuf==3.20.3
     - psutil==7.2.2
     - pure-eval==0.2.3
     - py-cpuinfo==9.0.0

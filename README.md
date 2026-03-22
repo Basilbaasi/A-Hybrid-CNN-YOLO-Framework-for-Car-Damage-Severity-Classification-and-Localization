@@ -1,308 +1,222 @@
 # Car Damage Detection AI
-## A Hybrid CNN–YOLO Framework for Car Damage Severity Classification and Localization
+## Hybrid CNN + YOLO Pipeline for Damage Localization and Severity Classification
 
-An AI-powered system that detects **vehicle damage locations** and classifies the **severity of the damage** using a hybrid deep learning architecture combining **YOLOv8 object detection** and **CNN classification**.
+This project is an end-to-end computer vision system that detects damaged regions in vehicle images and classifies damage severity using a hybrid deep learning pipeline.
 
-The system includes a **Flask-based web interface** that allows users to upload vehicle images and automatically receive damage detection and severity analysis.
+It combines:
 
----
+- **YOLOv8** for damage localization
+- **CNN** for severity classification
+- **Flask** for an interactive web UI and inference service
 
-# Project Overview
-
-Vehicle damage inspection is a critical step in insurance claim processing and vehicle evaluation. Manual inspection can be time-consuming and subjective.
-
-This project proposes an automated deep learning pipeline that can:
-
-- Detect damaged regions in car images
-- Classify the severity of the damage
-- Provide an interactive web interface for testing
-
-The system integrates:
-
-- **YOLOv8** → damage localization  
-- **CNN** → severity classification  
-- **Flask** → web interface
+The main goal of this project is not only building a working model, but also learning **MLOps through a real project** by repeatedly training, validating, integrating, testing, deploying, modifying, and redeploying the system.
 
 ---
 
-# System Architecture
+## Project Goal
 
-```
+This repository is being developed as a practical MLOps learning project. The focus is to learn how to:
+
+- refactor notebook-based ML code into a modular project
+- separate training, validation, inference, and serving
+- manage configuration through YAML
+- build reproducible environments
+- test model APIs
+- deploy and later redeploy improved versions
+- evolve the project like a real production ML system
+
+---
+
+## What the System Does
+
+Given a car image:
+
+1. **YOLOv8** detects the damaged region
+2. The detected region is cropped
+3. **CNN** classifies the severity as:
+   - Minor
+   - Moderate
+   - Severe
+4. The Flask UI displays:
+   - detected damage region
+   - bounding box
+   - severity prediction
+   - confidence scores
+
+---
+
+## Current Architecture
+
+```text
 Input Car Image
-        │
-        ▼
-YOLOv8 Object Detection
-(Damage Localization)
-        │
-        ▼
-Bounding Box Extraction
-(Crop Damage Region)
-        │
-        ▼
-CNN Classifier
-(Severity Prediction)
-        │
-        ▼
-Flask Web Application
-(Display Results)
-```
+      ↓
+YOLOv8 Damage Detection
+      ↓
+Crop Detected Region
+      ↓
+CNN Severity Classification
+      ↓
+Flask Web UI / API Output
+Refactored Project Structure
+car_damage/
+│
+├── app/
+│   ├── flask_app.py
+│   ├── templates/
+│   │   └── index.html
+│   └── static/
+│       └── images/
+│
+├── src/
+│   ├── predict.py
+│   ├── train_cnn.py
+│   ├── validate_cnn.py
+│   ├── train_yolo.py
+│   └── validate_yolo.py
+│
+├── configs/
+│   └── params.yaml
+│
+├── models/
+│   ├── car.h5
+│   └── best.pt
+│
+├── data/
+│   ├── training/
+│   └── validation/
+│
+├── car_damage_yolo/
+│   ├── images/
+│   ├── labels/
+│   └── data.yaml
+│
+├── tests/
+│   └── test_predict.py
+│
+├── environment.yml
+├── requirements.txt
+└── README.md
+Why This Refactor Matters
 
-The hybrid architecture enables both **damage detection and severity classification** in a single workflow.
+The older version of this repository was centered around a root-level Flask app, notebook-driven experimentation, and direct model usage from a single workflow. The GitHub version still reflects that older structure.
 
----
+This refactor improves the project by separating:
 
-# Damage Severity Classes
+configuration
+training
+validation
+prediction
+serving
+testing
 
-The model classifies vehicle damage into three categories:
+This is important for MLOps because it makes the system easier to:
 
-| Class | Description |
-|------|-------------|
-| Minor | Small scratches or light dents |
-| Moderate | Noticeable dents or panel damage |
-| Severe | Major structural damage |
+debug
+retrain
+validate
+deploy
+version
+extend later with Docker, CI/CD, and monitoring
+Models Used
+1. YOLOv8
 
----
+Used for detecting the damaged region in the vehicle image.
 
-# Technologies Used
+2. CNN
 
-| Component | Technology |
-|--------|--------|
-| Programming Language | Python |
-| Web Framework | Flask |
-| Object Detection | YOLOv8 (Ultralytics) |
-| Classification | CNN (TensorFlow / Keras) |
-| Deep Learning Frameworks | TensorFlow, PyTorch |
-| Image Processing | OpenCV |
-| Frontend | HTML, CSS |
-| Visualization | Matplotlib |
+Used for classifying the severity of the detected damage into:
 
----
-
-# Dataset Structure
-
-The dataset is organized into training and validation sets for CNN training.
-
-```
-data/
-   training/
-      01-minor
-      02-moderate
-      03-severe
-
-   validation/
-      01-minor
-      02-moderate
-      03-severe
-```
-
-For YOLO training, the dataset follows the YOLO format:
-
-```
-car_damage_yolo/
-   images/
-      train/
-      val/
-
-   labels/
-      train/
-      val/
-```
-
----
-
-# CNN Severity Classification Model
-
-The CNN model predicts the **severity level of the detected damage region**.
-
-### Input Size
-
-```
-224 × 224
-```
-
-### Classes
-
-```
 Minor
 Moderate
 Severe
-```
+Environment Setup
+Option 1: Conda
 
-### Training Configuration
+From the project folder:
 
-| Parameter | Value |
-|------|------|
-| Optimizer | Adam |
-| Loss Function | Categorical Crossentropy |
-| Epochs | 30 |
-| Batch Size | 32 |
+conda env create -f environment.yml -n cnn_yolo
+conda activate cnn_yolo
+Option 2: pip + venv
+python -m venv venv
+venv\Scripts\activate   # Windows
+pip install -r car_damage/requirements.txt
+How to Run
 
-### Training Results
+Important: run module-based commands from the directory above car_damage.
 
-| Metric | Value |
-|------|------|
-| Final Training Accuracy | **87.4%** |
-| Final Validation Accuracy | **54.4%** |
+Train CNN
+python -m car_damage.src.train_cnn
+Validate CNN
+python -m car_damage.src.validate_cnn
+Train YOLO
+python -m car_damage.src.train_yolo
+Validate YOLO
+python -m car_damage.src.validate_yolo
+Run Flask App
+python car_damage/app/flask_app.py
 
-The difference between training and validation accuracy indicates **mild overfitting**, likely caused by:
+Then open:
 
-- limited dataset size  
-- visual similarity between damage categories  
-- variations in lighting and camera angle
+http://127.0.0.1:5000/
+API Endpoints
+Health Check
+GET /health
+CNN-only Prediction
+POST /predict/cnn
+YOLO-only Prediction
+POST /predict/yolo
+Full Pipeline Prediction
+POST /predict
+Testing
 
----
+Run basic tests:
 
-# YOLOv8 Damage Detection Model
+python -m unittest discover -s car_damage/tests
 
-YOLOv8 is used to detect damaged regions in the vehicle image.
+These tests verify:
 
-### Training Configuration
+CNN prediction output structure
+YOLO prediction output structure
+Flask health endpoint
+Current Development Focus
 
-| Parameter | Value |
-|------|------|
-| Model | YOLOv8n |
-| Image Size | 640 |
-| Epochs | ~30 |
-| Batch Size | 8 |
+This project is being developed iteratively with an MLOps mindset:
 
-### Evaluation Metrics
+deploy first with the current working models
+improve models step by step
+validate each update
+integrate and redeploy
+track the evolution of the system as a real-world ML project
 
-### Evaluation Metrics
+Upcoming MLOps steps include:
 
-| Metric | Score |
-|------|------|
-| Precision | **0.542** |
-| Recall | **0.708** |
-| mAP@0.5 | **0.659** |
-| mAP@0.5:0.95 | **0.647** |
+dependency cleanup
+Dockerization
+deployment
+CI/CD
+model versioning
+monitoring and observability
+Notes on UI Logic
 
+In the current integrated UI flow:
 
-These results show the model can effectively detect damaged areas in vehicle images.
+bounding box color follows the CNN severity prediction
+score displayed on the image shows YOLO confidence
+severity panel shows CNN prediction
+severity confidence in the panel shows CNN confidence
 
----
+This keeps localization and classification outputs separated properly.
 
-# Web Application Features
+Repository History Note
 
-The Flask web interface allows users to interact with the AI system.
+The current GitHub repository still shows the older monolithic project layout, root-level app structure, and older README content. The next commit should update the repository to reflect the modular structure and MLOps-focused workflow now implemented locally.
 
-Features include:
+Author
 
-- Image upload interface
-- Automatic damage detection
-- Multiple damage detection support
-- Bounding box visualization
-- Severity classification
-- Confidence score display
-- Result summary panel
+Basil
 
----
+AI / Data Science student building real-world ML and MLOps projects.
 
-# Repository Structure
+If you found this project useful
 
-```
-car-damage-detection-ai
-│
-├── app.py
-├── README.md
-├── requirements.txt
-├── .gitignore
-│
-├── models
-│   └── car.h5
-│
-├── runs
-│   └── detect
-│       └── car_damage_detector2
-│           └── weights
-│               └── best.pt
-│
-├── templates
-│   └── index.html
-│
-├── static
-│   └── images
-│
-├── notebooks
-│   └── training_pipeline.ipynb
-```
-
----
-
-# Installation and Setup
-
-### Clone the repository
-
-```bash
-git clone https://github.com/yourusername/car-damage-detection-ai.git
-cd car-damage-detection-ai
-```
-
-### Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### Run the application
-
-```bash
-python app.py
-```
-
----
-
-# Access the Web Interface
-
-Open a browser and navigate to:
-
-```
-http://127.0.0.1:5000
-```
-
-Upload a car image and the system will detect and classify the damage automatically.
-
----
-
-# Example Workflow
-
-1. Upload vehicle image  
-2. YOLO detects damaged regions  
-3. Bounding boxes highlight damage locations  
-4. Each region is classified by the CNN model  
-5. The web interface displays severity and confidence scores
-
----
-
-# Limitations
-
-- Limited dataset size
-- Similar visual features between classes
-- Lighting variations may affect detection
-
-These can be improved with larger datasets and better data augmentation.
-
----
-
-# Future Improvements
-
-Potential improvements include:
-
-- Larger training dataset
-- Transfer learning using EfficientNet or ResNet
-- Real-time video damage detection
-- Docker containerization
-- Cloud deployment
-- Full MLOps pipeline integration
-
----
-
-# Author
-
-**Basil C K**  
-B.Tech Artificial Intelligence and Data Science
-
----
-
-# License
-
-This project is developed for **academic and research purposes**.
+Please consider starring the repository.

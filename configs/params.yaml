@@ -1,0 +1,37 @@
+cnn:
+  input_size: [224, 224, 3]
+  batch_size: 32
+  epochs: 30
+  dropout: 0.2
+  learning_rate: 0.001
+
+classes:
+  names: ["minor", "moderate", "severe"]
+  num_classes: 3
+
+data:
+  # CNN dataset folders (each class subfolder goes in here)
+  cnn_training_path: data/training
+  cnn_validation_path: data/validation
+  # YOLO dataset folders (images and labels, train/val)
+  yolo_images_train_path: car_damage_yolo/images/train
+  yolo_images_val_path: car_damage_yolo/images/val
+  yolo_labels_train_path: car_damage_yolo/labels/train
+  yolo_labels_val_path: car_damage_yolo/labels/val
+
+model_paths:
+  cnn_model: models/car.h5
+  yolo_model: models/best.pt
+
+yolo:
+  confidence_threshold: 0.4
+  epochs: 20
+  imgsz: 640
+  batch_size: 16
+  data_yaml: car_damage_yolo/data.yaml
+  model_name: yolov8n.pt
+  experiment_name: car_damage_detector
+
+flask:
+  host: 0.0.0.0
+  port: 5000

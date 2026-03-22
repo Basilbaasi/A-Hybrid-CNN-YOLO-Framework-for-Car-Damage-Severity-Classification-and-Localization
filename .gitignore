@@ -1,57 +1,96 @@
-# -----------------------
-# Python cache
-# -----------------------
+# ==============================
+# Python
+# ==============================
 __pycache__/
 *.py[cod]
+*.pyo
+*.pyd
+*.so
 
-# -----------------------
-# Jupyter
-# -----------------------
-.ipynb_checkpoints/
-
-# -----------------------
-# Virtual environments
-# -----------------------
+# ==============================
+# Virtual Environments
+# ==============================
 .env
 .venv
 env/
 venv/
+cnn_yolo/
 
-# Ignore project documentation archive and duplicate model package
-car_damage_detection_project_record.docx
-model.zip
-
-# -----------------------
-# Dataset folders
-# -----------------------
-data/
-car_damage_yolo/
-
-# -----------------------
-# YOLO outputs
-# -----------------------
-runs/*
-
-# Allow trained model directory
-!runs/detect/
-!runs/detect/car_damage_detector2/
-!runs/detect/car_damage_detector2/weights/
-!runs/detect/car_damage_detector2/weights/best.pt
-
-# -----------------------
-# OS junk
-# -----------------------
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# -----------------------
-# IDE files
-# -----------------------
+# ==============================
+# IDE / Editor
+# ==============================
 .vscode/
 .idea/
 
-# -----------------------
+# ==============================
+# OS Files
+# ==============================
+.DS_Store
+Thumbs.db
+
+# ==============================
 # Logs
-# -----------------------
+# ==============================
 *.log
+
+# ==============================
+# Jupyter
+# ==============================
+.ipynb_checkpoints/
+
+# ==============================
+# ML Training Outputs (YOLO)
+# ==============================
+runs/
+outputs/
+logs/
+
+# ==============================
+# Model Weights (IGNORE HEAVY FILES)
+# ==============================
+*.pt
+*.pth
+*.h5
+*.onnx
+
+# Ignore full model folders but keep structure
+models/*
+!models/.gitkeep
+
+# ==============================
+# Dataset (IMPORTANT)
+# ==============================
+# Ignore actual data but keep folder structure
+data/*
+!data/.gitkeep
+
+
+car_damage_yolo/*
+!car_damage_yolo/images/.gitkeep
+!car_damage_yolo/images/train/.gitkeep
+!car_damage_yolo/images/val/.gitkeep
+!car_damage_yolo/labels/.gitkeep
+!car_damage_yolo/labels/train.gitkeep
+!car_damage_yolo/labels/val.gitkeep
+!car_damage_yolo/data.yaml/.gitkeep
+
+
+!car_damage_yolo/.gitkeep
+
+# ==============================
+# Cache / Temp
+# ==============================
+.cache/
+*.cache
+
+# ==============================
+# Misc
+# ==============================
+*.zip
+*.tar
+*.gz
+
+# ==============================
+# Environment / Secrets
+# ==============================
+*.env
