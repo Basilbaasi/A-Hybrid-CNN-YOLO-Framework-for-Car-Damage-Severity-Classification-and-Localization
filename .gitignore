@@ -10,24 +10,26 @@ cnn_yolo/
 # IDE
 .vscode/
 .idea/
-# Logs / caches
+# Logs / cache
 *.log
 .cache/
 *.cache
 # YOLO outputs
 runs/
-# Models: keep folder structure, only README.txt tracked
-models/**
+# Ignore model binaries everywhere
+*.pt
+*.pth
+*.h5
+*.onnx
+# Keep models folder + README.txt only
+models/*
 !models/
-!models/**/
-!models/**/README.txt
-# CNN dataset: keep folder structure, only README.txt tracked
-data/**
-!data/
+!models/README.txt
+# Ignore files inside data, keep folders + README.txt
+data/**/*
 !data/**/
 !data/**/README.txt
-# YOLO dataset: keep folder structure, only README.txt tracked
-car_damage_yolo/**
-!car_damage_yolo/
+# Ignore files inside YOLO dataset, keep folders + README.txt
+car_damage_yolo/**/*
 !car_damage_yolo/**/
 !car_damage_yolo/**/README.txt
