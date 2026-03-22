@@ -1,33 +1,33 @@
-# ==============================
-# Ignore ALL dataset contents
-# ==============================
-data/**
-car_damage_yolo/**
-# Keep ONLY README files
-!data/**/README.txt
-!car_damage_yolo/**/README.txt
-# ==============================
-# Models
-# ==============================
-models/**
-!models/README.txt
-# ==============================
-# YOLO outputs
-# ==============================
-runs/
-# ==============================
 # Python
-# ==============================
 __pycache__/
 *.py[cod]
-# ==============================
 # Environments
-# ==============================
+.env
+.venv
 env/
 venv/
-.venv/
-# ==============================
+cnn_yolo/
 # IDE
-# ==============================
 .vscode/
 .idea/
+# Logs / caches
+*.log
+.cache/
+*.cache
+# YOLO outputs
+runs/
+# Models: keep folder structure, only README.txt tracked
+models/**
+!models/
+!models/**/
+!models/**/README.txt
+# CNN dataset: keep folder structure, only README.txt tracked
+data/**
+!data/
+!data/**/
+!data/**/README.txt
+# YOLO dataset: keep folder structure, only README.txt tracked
+car_damage_yolo/**
+!car_damage_yolo/
+!car_damage_yolo/**/
+!car_damage_yolo/**/README.txt
