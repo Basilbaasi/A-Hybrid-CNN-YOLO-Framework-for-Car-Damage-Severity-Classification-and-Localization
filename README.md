@@ -1,6 +1,8 @@
 # Damage API
 ### Hybrid CNN–YOLO Pipeline for Vehicle Damage Detection and Severity Classification
 
+---
+
 ## Overview
 
 **Damage API** is an end-to-end computer vision project that detects damaged regions in vehicle images and classifies the severity of the detected damage.
@@ -31,8 +33,8 @@ AI & Data Science Graduate | Python Developer | Machine Learning Engineer
 ## Problem Statement
 
 Given an image of a damaged vehicle, the system should:
-1. Detect the damaged region
-2. Crop the detected region
+1. Detect the damaged region  
+2. Crop the detected region  
 3. Classify the severity of the damage as:
    - Minor
    - Moderate
@@ -42,7 +44,7 @@ Given an image of a damaged vehicle, the system should:
 
 ## System Workflow
 
-
+```
 Input Vehicle Image
 |
 ▼
@@ -63,18 +65,19 @@ Final Output
 - YOLO Confidence
 - Severity Class
 - CNN Confidence
-
+```
 
 ---
 
 ## Project Structure
 
+```
 repo-root/
 |
 ├── damage_api/
-│   ├── init.py
+│   ├── __init__.py
 │   ├── app/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── flask_app.py
 │   │   ├── templates/
 │   │   │   └── index.html
@@ -82,7 +85,7 @@ repo-root/
 │   │       └── images/
 │   │
 │   ├── src/
-│   │   ├── init.py
+│   │   ├── __init__.py
 │   │   ├── predict.py
 │   │   ├── train_cnn.py
 │   │   ├── validate_cnn.py
@@ -116,7 +119,7 @@ repo-root/
 │       └── val/
 |
 ├── tests/
-│   ├── init.py
+│   ├── __init__.py
 │   └── test_predict.py
 |
 ├── notebooks/
@@ -124,7 +127,7 @@ repo-root/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-
+```
 
 ---
 
@@ -157,166 +160,107 @@ repo-root/
 
 ### Option 1: Conda (Recommended)
 
-Create the environment:
-
+```bash
 conda env create -f environment.yml
 conda activate cnn_yolo
-
+```
 
 ### Option 2: pip
 
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
 ## Important Run Location
 
-Run all commands from the repository root (the folder that contains damage_api/, data/, car_damage_yolo/, etc.).
+Run all commands from the repository root.
 
-Example:
-
+```bash
 cd <repo-folder-name>
+```
 
-
-Do not run commands from inside damage_api/.
+Do not run commands from inside `damage_api/`.
 
 ---
 
 ## Dataset Setup
 
-### 1. CNN Dataset
+### CNN Dataset
 
-Place CNN training and validation images in this structure:
-
+```
 data/
 ├── training/
 │   ├── 01-minor/
 │   ├── 02-moderate/
 │   └── 03-severe/
-│
 └── validation/
-├── 01-minor/
-├── 02-moderate/
-└── 03-severe/
+    ├── 01-minor/
+    ├── 02-moderate/
+    └── 03-severe/
+```
 
+### YOLO Dataset
 
-Each class folder should contain the corresponding images.
-
-### 2. YOLO Dataset
-
-Place YOLO images and label files in this structure:
-
+```
 car_damage_yolo/
 ├── images/
 │   ├── train/
 │   └── val/
-│
 └── labels/
-├── train/
-└── val/
-
-
-Each image must have a matching label file with the same base filename.
+    ├── train/
+    └── val/
+```
 
 Example:
 
+```
 images/train/sample1.jpg
 labels/train/sample1.txt
-
+```
 
 ---
 
 ## Configuration
 
-All important settings are controlled through:
-
+```
 damage_api/configs/params.yaml
+```
 
+Also update:
 
-This file includes settings for:
-- CNN input size
-- Batch size
-- Epochs
-- Learning rate
-- Class names
-- Model paths
-- YOLO confidence threshold
-- Flask host and port
-- Dataset paths
-
-**Important:** If your dataset paths differ on another system, update the relevant paths inside:
-
-damage_api/configs/params.yaml
-
-
-Also make sure your YOLO dataset config file points correctly to the dataset root:
-
+```
 car_damage_yolo/data.yaml
-
-
-Update that file if needed when moving the project to another machine.
+```
 
 ---
 
 ## Training
 
-### Train CNN
-
+```bash
 python -m damage_api.src.train_cnn
-
-
-This will:
-- Read configuration from params.yaml
-- Load images from data/training and data/validation
-- Train the CNN model
-- Save the trained model to the configured model path
-
-### Train YOLO
-
 python -m damage_api.src.train_yolo
-
-
-This will:
-- Read YOLO settings from params.yaml
-- Read dataset structure from car_damage_yolo/data.yaml
-- Train the YOLO detector
-- Save outputs under runs/
+```
 
 ---
 
 ## Validation
 
-### Validate CNN
-
+```bash
 python -m damage_api.src.validate_cnn
-
-
-This prints:
-- Total validation samples
-- Overall accuracy
-- Per-class accuracy
-- Confusion matrix
-
-### Validate YOLO
-
 python -m damage_api.src.validate_yolo
-
-
-This prints YOLO detection metrics such as:
-- Precision
-- Recall
-- mAP@50
-- mAP@50-95
+```
 
 ---
 
 ## Running the Web App
 
-Start the Flask app:
-
+```bash
 python damage_api/app/flask_app.py
+```
 
-
-Then open: http://127.0.0.1:5000/
+Open: http://127.0.0.1:5000/
 
 ---
 
@@ -324,117 +268,86 @@ Then open: http://127.0.0.1:5000/
 
 ### Health Check
 
+```
 GET /health
-
-
-Response:
+```
 
 ```json
 {
   "status": "ok",
   "models": ["cnn", "yolo"]
 }
+```
 
-Combined Prediction
+### Combined Prediction
 
+```
 POST /predict
+```
 
-Used by the web UI and can also be tested manually.
-Input:
+### CNN-only
 
-form-data
-key: file
-value: image file
-
-CNN-only Prediction
-
+```
 POST /predict/cnn
+```
 
-Returns CNN severity prediction.
+### YOLO-only
 
-YOLO-only Prediction
-
+```
 POST /predict/yolo
+```
 
-Returns YOLO detection output.
+---
 
+## Testing
 
-UI Behavior
-
-The current UI logic is:
-
-- Bounding box color is based on the CNN severity prediction
-- Score shown on the image is the YOLO confidence
-- Severity shown below the image is the CNN prediction
-- Confidence shown below the image is the CNN confidence
-- This keeps localization confidence and classification confidence separated clearly.
-
-
-Testing
-
-Run unit tests with:
-
+```bash
 python -m unittest discover -s tests
+```
 
-- These tests verify:
-- Prediction function output structure
-- Flask app health endpoint
-- Core inference flow
+---
 
-Models
+## Models
 
-
-Model files are not included in the repository by default. Place trained models in the appropriate configured location before inference.
-
-Typical examples:
-
-- CNN model: .h5
-- YOLO model: .pt
+- CNN: `.h5`
+- YOLO: `.pt`
 
 Update paths in:
 
+```
 damage_api/configs/params.yaml
+```
 
-if your model filenames or locations are different.
+---
 
-Reproducibility
+## Reproducibility
 
+1. Clone the repository  
+2. Create environment  
+3. Add datasets  
+4. Update paths  
+5. Train/validate  
+6. Run app  
 
-To reproduce the pipeline on another machine:
+---
 
-- Clone the repository
-- Create environment using environment.yml or requirements.txt
-- Add datasets to data/ and car_damage_yolo/
-- Update paths in params.yaml and car_damage_yolo/data.yaml if needed
-- Train or validate models
-- Run the Flask app
+## Learning Goals
 
+- MLOps fundamentals  
+- Testing  
+- Modular design  
 
-Learning Goals
+---
 
-This project is being developed as a hands-on platform to learn:
-
-- Modular project design
-- Training and validation workflows
-- Configuration management
-- Testing practices
-- MLOps fundamentals
-
-Future learning areas include Docker, CI/CD, model deployment, and scalable ML systems.
-
-
-Connect With Me
-
-I am actively seeking opportunities in MLOps, Machine Learning Engineering, and Backend Development roles.
+## Connect With Me
 
 - Portfolio: https://basilbaasi.github.io/
 - Email: basilck618@gmail.com
 - LinkedIn: linkedin.com/in/basilck
 - GitHub: github.com/basilbaasi
--
-Feel free to reach out for collaborations, feedback, or opportunities!
 
+---
 
-License
+## License
 
-This project is open source and available for educational and research purposes.
+Open source for educational use.
