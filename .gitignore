@@ -1,35 +1,50 @@
+# ==============================
 # Python
+# ==============================
 __pycache__/
 *.py[cod]
-# Environments
+# ==============================
+# Virtual Environments
+# ==============================
 .env
 .venv
 env/
 venv/
 cnn_yolo/
-# IDE
+# ==============================
+# IDE / Editor
+# ==============================
 .vscode/
 .idea/
-# Logs / cache
+# ==============================
+# OS Files
+# ==============================
+.DS_Store
+Thumbs.db
+# ==============================
+# Logs / Cache
+# ==============================
 *.log
 .cache/
 *.cache
-# YOLO outputs
+# ==============================
+# YOLO training outputs
+# ==============================
 runs/
-# Ignore model binaries everywhere
+# ==============================
+# Model files (if added later)
+# ==============================
 *.pt
 *.pth
 *.h5
 *.onnx
-# Keep models folder + README.txt only
-models/*
-!models/
-!models/README.txt
-# Ignore files inside data, keep folders + README.txt
-data/**/*
-!data/**/
-!data/**/README.txt
-# Ignore files inside YOLO dataset, keep folders + README.txt
-car_damage_yolo/**/*
-!car_damage_yolo/**/
-!car_damage_yolo/**/README.txt
+# ==============================
+# Jupyter
+# ==============================
+.ipynb_checkpoints/
+# ==============================
+# Optional: zip / temp files
+# ==============================
+*.zip
+*.tar
+*.gz

@@ -1,0 +1,7 @@
+path: C:/Users/basil/OneDrive - jfmofficial/Desktop/car_damage/car_damage_yolo
+
+train: images/train
+val: images/val
+
+names:
+  0: damage
