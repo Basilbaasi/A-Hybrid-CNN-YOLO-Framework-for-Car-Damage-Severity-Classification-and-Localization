@@ -3,8 +3,6 @@
 # ==============================
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
 # ==============================
 # Virtual Environments
 # ==============================
@@ -14,63 +12,45 @@ env/
 venv/
 cnn_yolo/
 # ==============================
-# IDE / Editor
+# IDE
 # ==============================
 .vscode/
 .idea/
-# ==============================
-# OS Files
-# ==============================
-.DS_Store
-Thumbs.db
 # ==============================
 # Logs
 # ==============================
 *.log
 # ==============================
-# Jupyter
-# ==============================
-.ipynb_checkpoints/
-# ==============================
-# YOLO Training Outputs
+# YOLO Outputs
 # ==============================
 runs/
-outputs/
 # ==============================
-# Model Files (ignore all except README.txt)
+# Models
 # ==============================
-models/*
-!models/README.txt
 *.pt
 *.pth
 *.h5
 *.onnx
+# Keep models folder but ignore contents except README.txt
+models/*
+!models/
+!models/README.txt
 # ==============================
-# CNN Dataset (ignore all except README.txt)
+# DATASET (ignore ALL files, keep structure)
 # ==============================
-data/training/*
-!data/training/*/
-!data/training/*/README.txt
-data/validation/*
-!data/validation/*/
-!data/validation/*/README.txt
+data/*
+!data/
+!data/**/
+!data/**/README.txt
 # ==============================
-# YOLO Dataset (ignore all except README.txt)
+# YOLO DATASET
 # ==============================
-car_damage_yolo/images/*
-!car_damage_yolo/images/*/
-!car_damage_yolo/images/*/README.txt
-car_damage_yolo/labels/*
-!car_damage_yolo/labels/*/
-!car_damage_yolo/labels/*/README.txt
+car_damage_yolo/*
+!car_damage_yolo/
+!car_damage_yolo/**/
+!car_damage_yolo/**/README.txt
 # ==============================
-# Cache / Temp
+# Cache
 # ==============================
 .cache/
 *.cache
-# ==============================
-# Misc
-# ==============================
-*.zip
-*.tar
-*.gz
