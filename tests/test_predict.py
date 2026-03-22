@@ -4,8 +4,8 @@ import tempfile
 import unittest
 import numpy as np
 import cv2
-from car_damage.src.predict import predict_cnn, predict_yolo
-from car_damage.app.flask_app import app
+from damage_api.src.predict import predict_cnn, predict_yolo
+from damage_api.app.flask_app import app
 
 class PredictTestCase(unittest.TestCase):
     def setUp(self) -> None:
