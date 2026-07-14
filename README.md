@@ -1,12 +1,14 @@
 # A Hybrid CNN-YOLO Framework for Car Damage Severity Classification and Localization
 
+Repository: [Basilbaasi/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization](https://github.com/Basilbaasi/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization)
+
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://www.tensorflow.org)
 [![Ultralytics YOLOv8](https://img.shields.io/badge/YOLOv8-blue?style=for-the-badge)](https://github.com/ultralytics/ultralytics)
 [![Python 3.9](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-An end-to-end computer vision framework designed for localized car damage detection and severity classification. The system uses a hybrid approach: **Ultralytics YOLOv8** identifies bounding boxes of damaged areas, and a custom **TensorFlow/Keras Convolutional Neural Network (CNN)** classifies the severity of each localized region as **minor**, **moderate**, or **severe**. The combined pipeline is served via a **FastAPI** web server offering a browser interface and API endpoints.
+An end-to-end computer vision framework for localized car damage detection and severity classification. The system combines **Ultralytics YOLOv8** for damage localization with a custom **TensorFlow/Keras CNN** for severity classification into **minor**, **moderate**, or **severe** categories. The pipeline is served through a **FastAPI** web interface and REST API.
 
 ---
 
@@ -26,37 +28,15 @@ An end-to-end computer vision framework designed for localized car damage detect
 
 ---
 
-## Workflow Pipeline Diagram
+## Workflow Overview
 
-The flowchart below demonstrates how the hybrid architecture coordinates YOLOv8 localization and TensorFlow CNN classification to deliver annotated bounding boxes and severity labels:
+The hybrid pipeline works as follows:
 
-```mermaid
-graph TD
-    A[User / Client Application] -->|Uploads Image| B(FastAPI Server /predict)
-    B -->|Check Models Readiness| C{Models Loaded?}
-    C -->|No| D[Return 503 degraded status]
-    C -->|Yes| E[Pass full image to YOLOv8]
-    
-    E -->|Predict Bounding Boxes| F[YOLOv8 Damage Localization]
-    F -->|Output Bounding Boxes list| G{Damage boxes found?}
-    
-    G -->|No| H[Mark Severity as Unknown]
-    G -->|Yes| I[Iterate through Bounding Boxes]
-    
-    I -->|Crop Damage Area| J[Extract Sub-image Crop]
-    J -->|Resize to 224x224 & Normalize| K[Preprocess Crop for CNN]
-    K -->|Pass to TensorFlow CNN| L[CNN Severity Classifier]
-    L -->|Output Probability Distribution| M[Classify: minor / moderate / severe]
-    
-    M -->|Color Coded Annotations| N[Draw rectangle on image <br> Green: minor | Orange: moderate | Red: severe]
-    N -->|Include Confidence Score| O[Annotate image with labels]
-    
-    O -->|All boxes processed| P[Save Result image as result-UUID.jpg]
-    H --> P
-    
-    P -->|HTML Template Response| Q[Render UI index.html with Annotations]
-    P -->|JSON API response| R[Return predictions list & coordinates]
-```
+1. A user uploads an image through the FastAPI web interface or API.
+2. YOLOv8 detects damaged regions and returns bounding boxes.
+3. Each detected region is cropped and resized for CNN inference.
+4. The CNN predicts the severity as minor, moderate, or severe.
+5. The final output includes annotated bounding boxes, confidence scores, and severity labels.
 
 ---
 
@@ -73,11 +53,11 @@ graph TD
 
 ## Project Directory Layout
 
-Below is the directory structure of the repository:
+The repository layout is shown below:
 
 ```text
-A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/
-├── .venv/                         # Standard Python Virtual Environment directory (ignored by git)
+repo-root/
+├── .venv/                         # Local Python virtual environment (ignored by git)
 ├── damage_api/                    # Application and MLOps scripts folder
 │   ├── app/                       # FastAPI application core
 │   │   ├── static/                # Static assets
@@ -114,13 +94,10 @@ A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localizat
 All setup and execution commands should be run from the repository root directory.
 
 ### Option A: Anaconda Prompt Setup (Recommended)
-If you manage dependencies with conda, you can instantiate the environment using the provided [environment.yml](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/environment.yml).
+If you manage dependencies with conda, you can instantiate the environment using the provided [environment.yml](environment.yml).
 
 1. Open your **Anaconda Prompt** terminal.
-2. Navigate to the directory containing this project:
-   ```cmd
-   cd "C:\Users\basil\OneDrive - jfmofficial\Desktop\work\car-damage-detection-ai\A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization"
-   ```
+2. Navigate to the repository root.
 3. Create the conda environment by executing:
    ```cmd
    conda env create -f environment.yml
@@ -131,7 +108,7 @@ If you manage dependencies with conda, you can instantiate the environment using
    ```
 
 ### Option B: Normal Command Prompt / venv Setup
-If you prefer standard python virtual environments with `pip`, set up the virtual environment using [requirements.txt](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/requirements.txt).
+If you prefer standard Python virtual environments with `pip`, set up the environment using [requirements.txt](requirements.txt).
 
 1. Open your terminal (e.g. Command Prompt, PowerShell, or Git Bash).
 2. Navigate to the repository root directory.
@@ -164,13 +141,13 @@ If you prefer standard python virtual environments with `pip`, set up the virtua
 
 ## Trained Models Deployment
 
-The pre-trained model weights are omitted from git control due to file size. Before launching the FastAPI service, copy your trained binary artifacts to the [models](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/damage_api/models) folder:
+The pre-trained model weights are omitted from git control due to file size. Before launching the FastAPI service, copy your trained binary artifacts to the [damage_api/models](damage_api/models) folder:
 
 - **TensorFlow CNN**: Copy `car.h5` to `damage_api/models/car.h5`
 - **YOLOv8 Detection**: Copy `best.pt` to `damage_api/models/best.pt`
 
 > [!NOTE]
-> If your weight models are named differently or located in another folder, update the `model_paths.cnn_model` and `model_paths.yolo_model` configurations in the parameters file: [params.yaml](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/damage_api/configs/params.yaml).
+> If your weight models are named differently or located elsewhere, update the `model_paths.cnn_model` and `model_paths.yolo_model` settings in [damage_api/configs/params.yaml](damage_api/configs/params.yaml).
 
 ---
 
@@ -244,7 +221,7 @@ curl.exe -X POST http://127.0.0.1:8000/predict/yolo -F "file=@C:\path\to\car_dam
 ## Training & Validation Pipeline
 
 To re-train or validate your custom models:
-1. Restore the dataset directories listed under the `data` properties in [params.yaml](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/damage_api/configs/params.yaml) (e.g. `data/training`, `car_damage_yolo/images/train`, etc.).
+1. Restore the dataset directories referenced in [damage_api/configs/params.yaml](damage_api/configs/params.yaml) (for example `data/training` or `car_damage_yolo/images/train`).
 2. Run the MLOps scripts from the repository root:
 
 *   **Train custom CNN**:
@@ -278,4 +255,4 @@ python -m unittest discover -s tests
 
 ## License
 
-This project is licensed under the terms of the MIT License. For details, refer to the [LICENSE](file:///c:/Users/basil/OneDrive%20-%20jfmofficial/Desktop/work/car-damage-detection-ai/A-Hybrid-CNN-YOLO-Framework-for-Car-Damage-Severity-Classification-and-Localization/LICENSE) file at the root of the workspace.
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
