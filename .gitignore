@@ -29,6 +29,7 @@ Thumbs.db
 *.log
 .cache/
 *.cache
+.ultralytics/
 # ==============================
 # YOLO training outputs
 # ==============================
@@ -40,6 +41,7 @@ runs/
 *.pth
 *.h5
 *.onnx
+damage_api/app/static/images/result-*.jpg
 # ==============================
 # Jupyter
 # ==============================
